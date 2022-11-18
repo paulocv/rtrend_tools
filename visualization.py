@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from run_forecast_states import CDC_QUANTILES_SEQ, NUM_QUANTILES
+from rtrend_tools.cdc_params import CDC_QUANTILES_SEQ, NUM_QUANTILES
 from toolbox.plot_tools import make_axes_seq
 
 

@@ -15,7 +15,8 @@ from rtrend_tools.cdc_params import CDC_QUANTILES_SEQ, NUM_QUANTILES, NUM_STATES
 from rtrend_tools.forecast_structs import CDCDataBunch
 
 
-def load_cdc_data(fname):
+def load_cdc_truth_data(fname):
+    """Load a generic truth data file from CDC."""
     cdc = CDCDataBunch()
 
     # Import
@@ -33,6 +34,8 @@ def load_cdc_data(fname):
         name = cdc.df.xs(l_id, level=1).iloc[0]["location_name"]  # Get the name from the first id occurrence
         cdc.to_loc_name[l_id] = name
         cdc.to_loc_id[name] = l_id
+
+    cdc.df.sort_index(level="date", inplace=True)  # Sort by dates.
 
     cdc.data_time_labels = cdc.df.index.levels[0].unique().sort_values()
 

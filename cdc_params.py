@@ -18,4 +18,5 @@ NUM_OUTP_LINES_WPOINTS = NUM_WEEKS_FORE * (NUM_STATES + 1) * (NUM_QUANTILES + 1)
 REF_DEADLINE = datetime.datetime(2022, 11, 14, 23)  # A reference for submission deadlines (a given Monday 11pm)
 
 # --- COVID parameters
-
+COV_NUM_STATES = 54  # COVID data includes American Samoa
+COV_REF_DEADLINE = datetime.datetime(2022, 11, 14, 15)  # A reference for submission deadlines (a given Monday 3pm)

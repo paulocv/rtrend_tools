@@ -44,6 +44,7 @@ class ForecastExecutionData:
         self.except_params: dict = None
         self.tg_params: dict = None
         self.interp_params: dict = None
+        self.smooth_params: dict = None
         self.mcmc_params: dict = None
         self.synth_params: dict = None
         self.recons_params: dict = None
@@ -79,6 +80,42 @@ class ForecastOutput:
         self.ct_past: np.ndarray = None
         self.float_data_daily: np.ndarray = None  # Float data from the spline of the cumulative sum
         self.daily_spline: UnivariateSpline = None
+
+        # MCMC
+        self.rtm: synth.McmcRtEnsemble = None
+
+        # Synthesis
+        self.synth_name = None
+        self.rt_fore2d: np.ndarray = None
+        self.num_ct_samples = None
+
+        # Reconstruction
+        self.ct_fore2d: np.ndarray = None
+        self.ct_fore2d_weekly: np.ndarray = None
+        # self.weekly_quantiles: np.ndarray = None
+
+
+class CovHospForecastOutput:
+    """(For COVID Hospitallization incidence)
+    Contains data from forecasting process in one state: from smoothening to weekly reaggregation.
+    """
+
+    def __init__(self):
+        self.day_0: pd.Timestamp = None  # First day to have report (7 days before the first stamp in ROI)
+        self.day_pres: pd.Timestamp = None  # Day of the current report.
+        self.ndays_roi = None
+        self.ndays_fore = None
+
+        # MCMC (and etc)
+        self.tg_dist: np.ndarray = None
+
+        # Smoothening results
+        self.t_daily: np.ndarray = None
+        self.past_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the ROI
+        # self.fore_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the forecast region
+        self.ct_past: np.ndarray = None  # Smoothened daily data
+        self.float_data_daily: np.ndarray = None  # Float data after smoothening process
+        # self.daily_spline: UnivariateSpline = None
 
         # MCMC
         self.rtm: synth.McmcRtEnsemble = None

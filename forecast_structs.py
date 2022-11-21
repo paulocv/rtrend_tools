@@ -127,7 +127,7 @@ class CovHospForecastOutput:
 
         # Reconstruction
         self.ct_fore2d: np.ndarray = None
-        self.ct_fore2d_weekly: np.ndarray = None
+        # self.ct_fore2d_weekly: np.ndarray = None
         # self.weekly_quantiles: np.ndarray = None
 
 
@@ -143,6 +143,7 @@ class ForecastPost:
         # Forecasted data
         self.quantile_seq = None  # Just CDC default sequence of quantiles
         self.num_quantiles = None
+        self.daily_quantiles: np.ndarray = None   # Forecasted quantiles | a[i_q, i_day]
         self.weekly_quantiles: np.ndarray = None  # Forecasted quantiles | a[i_q, i_week]
         self.samples_to_us: np.ndarray = None  # ct_fore_weekly samples to sum up the US series. | a[i_sample, i_week]
 
@@ -180,6 +181,7 @@ class USForecastPost:
 
     def __init__(self):
         self.weekly_quantiles: np.ndarray = None  # Forecasted quantiles | a[i_q, i_week]
+        self.daily_quantiles: np.ndarray = None   # Forecasted quantiles | a[i_q, i_day]
         self.num_quantiles = None
 
         self.day_0: pd.Timestamp = None     # First day of ROI.

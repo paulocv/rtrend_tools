@@ -2,6 +2,7 @@
 Hub module for methods to synthesise future data from previous one.
 """
 import time
+from collections import defaultdict
 
 import numba as nb
 import numpy as np
@@ -66,23 +67,60 @@ def _k_end_f_default(x):
     return -0.520 * x + 1.46  # 1.6 to 1.2  |  1.0 to 1.0
 
 
-def apply_dynamic_ramp_to(arr, ndays_fore, k_start_f=_k_start_f_default, k_end_f=_k_end_f_default, x_array=None):
+def apply_dynamic_ramp_to(arr, ndays_fore, k_start_f=_k_start_f_default, k_end_f=_k_end_f_default,
+                          x_array=None):
+    raise NotImplementedError
+#     """
+#     Dynamic ramp, where k_start and k_end depend on an array of arguments.
+#     This array can be informed as x_array, expected to have the same number of samples as arr. If not informed, the
+#     first time point of each sample in arr (i.e., arr[:,0]) is used.
+#
+#     Parameters k_start_f and k_end_f are callables (scalar to scalar, array to array) that return k_start and k_end for
+#     each value in x_array.
+#     """
+#     if x_array is None:
+#         x_array = arr[:, 0]
+#
+#     if x_array.shape[0] != arr.shape[0]:
+#         raise ValueError("Hey, x_array must have the same size as the first dimension of arr.")
+#
+#     # --- Apply ramp
+#     ramp = np.linspace(k_start_f(x_array), k_end_f(x_array), ndays_fore).T
+#
+#     return ramp * arr
+
+
+def _k_linear_func(x, r1, r2):
+    return (r2/2 - r1) * (x - 1) + r1
+
+
+def apply_linear_dynamic_ramp_to(arr, ndays_fore, r1_start, r1_end, r2_start, r2_end, x_array=None, **kwargs):
     """
     Dynamic ramp, where k_start and k_end depend on an array of arguments.
     This array can be informed as x_array, expected to have the same number of samples as arr. If not informed, the
     first time point of each sample in arr (i.e., arr[:,0]) is used.
 
-    Parameters k_start_f and k_end_f are callables (scalar to scalar, array to array) that return k_start and k_end for
-    each value in x_array.
+    --- For each of the positions, start and end, it defines a k-coeffient function:
+    k(R) = a * R + b, where
+        a = r2 / 2 - r1
+        b = r1
+    And thus:
+        R'(1) = r1
+        R'(2) = r2
+
+
     """
+    # --- Argument (x-array) array parsing
     if x_array is None:
         x_array = arr[:, 0]
 
     if x_array.shape[0] != arr.shape[0]:
         raise ValueError("Hey, x_array must have the same size as the first dimension of arr.")
 
-    ramp = np.linspace(k_start_f(x_array), k_end_f(x_array), ndays_fore).T
-
+    # --- Apply ramp
+    ramp = np.linspace(_k_linear_func(x_array, r1_start, r2_start),
+                       _k_linear_func(x_array, r1_end, r2_end),
+                       ndays_fore).T
     return ramp * arr
 
 
@@ -218,7 +256,7 @@ def sorted_dynamic_ramp(rtm: McmcRtEnsemble, ct_past, ndays_fore, *args, **kwarg
     if out.shape[0] != 0:  # Ensemble can't be empty
         # --- Apply the slope
         # out = apply_ramp_to(out, k_start, k_end, ndays_fore)
-        out = apply_dynamic_ramp_to(out, ndays_fore=ndays_fore)
+        out = apply_linear_dynamic_ramp_to(out, ndays_fore=ndays_fore, **kwargs)
 
     return out
 

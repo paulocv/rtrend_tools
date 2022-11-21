@@ -10,6 +10,7 @@ import scipy.optimize
 import scipy.stats
 import warnings
 
+from rtrend_tools.cdc_params import CDC_QUANTILES_SEQ
 from rtrend_tools.rt_estimation import McmcRtEnsemble
 
 
@@ -364,3 +365,17 @@ def sample_series_with_replacement(ct_fore_2d: np.ndarray, nsamples_us: int, see
     np.random.seed(seed)  # Seeds numpy or numba generator.
 
     return ct_fore_2d[np.random.randint(0, nsamples_state, size=nsamples_us)]
+
+
+def calc_tseries_ensemble_quantiles(ct_fore2d, quantiles_seq=None):
+    """
+    Calculate a sequence of quantiles for each point of a time series ensemble.
+    Input signature: ct_fore2d[i_sample, i_t]
+
+    If a custom sequence of quantiles is not informed, uses the default from CDC.
+    """
+
+    if quantiles_seq is None:
+        quantiles_seq = CDC_QUANTILES_SEQ
+
+    return np.quantile(ct_fore2d, quantiles_seq, axis=0)

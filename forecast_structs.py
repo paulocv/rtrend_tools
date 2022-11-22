@@ -187,5 +187,6 @@ class USForecastPost:
         self.day_0: pd.Timestamp = None     # First day of ROI.
         self.day_pres: pd.Timestamp = None  # Day time stamp of present
         self.day_fore: pd.Timestamp = None  # Last day forecasted
-        self.fore_time_labels: pd.DatetimeIndex = None
+        self.fore_daily_tlabels: pd.DatetimeIndex = None  # Daily dates
+        self.fore_time_labels: pd.DatetimeIndex = None  # Weekly dates for the forecasted series.
 

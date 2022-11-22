@@ -1,0 +1,16 @@
+name: rtrend_forecast
+channels:
+  - defaults
+  - anaconda
+  - conda-forge
+dependencies:
+  - gh
+  - colorama
+  - numba
+  - numpy
+  - pandas
+  - pathos
+  - scipy
+  - matplotlib
+  - requests
+prefix: /Users/pventura/opt/anaconda3/envs/rtrend_forecast

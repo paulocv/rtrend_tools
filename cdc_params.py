@@ -11,6 +11,8 @@ NUM_QUANTILES = CDC_QUANTILES_SEQ.shape[0]
 NUM_WEEKS_FORE = 4
 
 # --- Flu parameters
+FLU_TRUTH_URL = "https://raw.githubusercontent.com/cdcepi/Flusight-forecast-data/master/data-truth/" \
+      "truth-Incident%20Hospitalizations.csv"
 NUM_STATES = 53  # Number of locations: states and jurisdictions, excluding the "US" entry.
 WEEKDAY_TGT = 5  # 5 = Saturday
 NUM_OUTP_LINES = NUM_WEEKS_FORE * (NUM_STATES + 1) * NUM_QUANTILES  # Expected output file number of lines

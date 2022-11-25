@@ -8,8 +8,9 @@ import subprocess
 
 NEW_SECTION = "\n" + 20 * "-"
 ENV_NAME = "rtrend_forecast"
-ENV_FLEX_PATH = "rtrend_tools/envs/latest.yml"
+ENV_FLEX_PATH = os.path.join("rtrend_tools", "envs", "latest.yml")
 MCMC_BIN = "main_mcmc_rt"
+MCMC_COMPILE_SCRIPT = os.path.join("rtrend_tools", "rt_mcmc", "compile_mcmc_rt.sh")
 
 
 def prompt_yn(msg):

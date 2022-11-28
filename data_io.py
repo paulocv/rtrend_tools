@@ -171,6 +171,7 @@ def export_forecast_cdc(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
 
     print(out_df)
 
+    os.makedirs(os.path.dirname(fname), exist_ok=True)
     out_df.to_csv(fname, index=False)
 
 

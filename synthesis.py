@@ -101,7 +101,7 @@ def apply_linear_dynamic_ramp_to(arr, ndays_fore, r1_start, r1_end, r2_start, r2
     first time point of each sample in arr (i.e., arr[:,0]) is used.
 
     --- For each of the positions, start and end, it defines a k-coeffient function:
-    k(R) = a * R + b, where
+    k(R) = a * (R - 1) + b, where
         a = r2 / 2 - r1
         b = r1
     And thus:

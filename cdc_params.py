@@ -28,7 +28,7 @@ def _get_next_deadline(ref_deadline, now=None):
     if now is None:
         now = datetime.today()
 
-    delta = (now - REF_DEADLINE) % timedelta(weeks=1)  # Time past the last deadline
+    delta = (now - ref_deadline) % timedelta(weeks=1)  # Time past the last deadline
     return now - delta + timedelta(weeks=1)
 
 

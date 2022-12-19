@@ -178,8 +178,8 @@ def plot_precalc_quantiles_as_layers(ax, quant_lines: np.ndarray, x_array, alpha
 # ----------------------------------------------------------------------------------------------------------------------
 
 def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantiles, factual_ct: pd.Series,
-                          state_name, i_ax=None, synth_name=None,
-                          num_quantiles=None, ct_color="C0", insert_point=None):
+                          quantile_seq: np.ndarray, state_name, i_ax=None, synth_name=None,
+                          num_quantiles=None, ct_color="C0", insert_point=None, highlight_quartiles=True):
     """Plot all data and configure ax for C(t) data of a single state."""
 
     if not isinstance(fore_time_labels, pd.DatetimeIndex):  # Tries to convert into a pandas Index if not yet
@@ -198,9 +198,21 @@ def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantil
     # Plot C(t) forecast quantiles and median.
     q_layers = plot_precalc_quantiles_as_layers(ax, fore_y_data2d, fore_x_data)
     if num_quantiles % 2 == 1:
-        median = ax.plot(fore_x_data, fore_y_data2d[num_quantiles // 2], "g--")
+        median = ax.plot(fore_x_data, fore_y_data2d[num_quantiles // 2], "g--s", ms=3)
     else:
         median = None
+
+    # Plot additional line for 25% and 75% quantiles
+    if highlight_quartiles:
+        for q in [0.25, 0.75]:
+            i_q = np.where(quantile_seq == q)
+            if i_q[0] == 0:  # Quantile not present
+                continue
+            i_q = i_q[0][0]
+
+            ax.plot(fore_x_data, fore_y_data2d[i_q], "g-", alpha=0.75)
+
+
 
     # Factual C(t) time series (past and, if available, forecast)
     ax.plot(factual_ct, color=ct_color)

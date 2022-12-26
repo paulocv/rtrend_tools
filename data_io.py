@@ -176,7 +176,7 @@ def export_forecast_cdc(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
     out_df.to_csv(fname, index=False)
 
 
-def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_point=None):
+def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_point=None, add_days=1):
     """
     Data is not assumed to strictly follow the CDC guidelines (all locations and quantiles),
     but warnings are thrown for irregular data.
@@ -237,7 +237,7 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
         # ---
         i_line = 0
         for i_day in range(ndays_fore):  # Loop over forecast days
-            day = fore_time_labels[i_day]  + pd.Timedelta(1, "d") # + int(add_week_to_labels) * datetime.timedelta(7)
+            day = fore_time_labels[i_day] + pd.Timedelta(add_days, "d")  # + int(add_week_to_labels) * datetime.timedelta(7)
 
             # Write data into arrays
             target_array[i_line:i_line + num_q] = target_fmt.format(i_day)

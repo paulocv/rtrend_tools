@@ -217,10 +217,11 @@ def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantil
     ax.plot(factual_ct, color=ct_color)
 
     # Plot trend over factual ROI data
-    x = (factual_ct.index - factual_ct.index[0]).days  # Int-based index
-    pcoefs = np.polyfit(x, factual_ct.values, deg=trend_deg)
-    pf = np.poly1d(pcoefs)
-    ax.plot(factual_ct.index, pf(x), "--", color="gray")
+    if plot_trend:
+        x = (factual_ct.index - factual_ct.index[0]).days  # Int-based index
+        pcoefs = np.polyfit(x, factual_ct.values, deg=trend_deg)
+        pf = np.poly1d(pcoefs)
+        ax.plot(factual_ct.index, pf(x), "--", color="gray")
 
     # Write state and synth name
     # ax.text(0.05, 0.9, state_name, transform=ax.transAxes)

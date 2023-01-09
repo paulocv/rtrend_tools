@@ -179,7 +179,8 @@ def plot_precalc_quantiles_as_layers(ax, quant_lines: np.ndarray, x_array, alpha
 
 def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantiles, factual_ct: pd.Series,
                           quantile_seq: np.ndarray, state_name, i_ax=None, synth_name=None,
-                          num_quantiles=None, ct_color="C0", insert_point=None, highlight_quartiles=True):
+                          num_quantiles=None, ct_color="C0", insert_point=None, highlight_quartiles=True,
+                          plot_trend=True, trend_deg=2):
     """Plot all data and configure ax for C(t) data of a single state."""
 
     if not isinstance(fore_time_labels, pd.DatetimeIndex):  # Tries to convert into a pandas Index if not yet
@@ -212,10 +213,14 @@ def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantil
 
             ax.plot(fore_x_data, fore_y_data2d[i_q], "g-", alpha=0.75)
 
-
-
     # Factual C(t) time series (past and, if available, forecast)
     ax.plot(factual_ct, color=ct_color)
+
+    # Plot trend over factual ROI data
+    x = (factual_ct.index - factual_ct.index[0]).days  # Int-based index
+    pcoefs = np.polyfit(x, factual_ct.values, deg=trend_deg)
+    pf = np.poly1d(pcoefs)
+    ax.plot(factual_ct.index, pf(x), "--", color="gray")
 
     # Write state and synth name
     # ax.text(0.05, 0.9, state_name, transform=ax.transAxes)

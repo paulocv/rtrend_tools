@@ -6,8 +6,6 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import UnivariateSpline
 
-import rtrend_tools.synthesis as synth
-
 
 class CDCDataBunch:
 
@@ -82,7 +80,8 @@ class ForecastOutput:
         self.daily_spline: UnivariateSpline = None
 
         # MCMC
-        self.rtm: synth.McmcRtEnsemble = None
+        import rtrend_tools.rt_estimation as mcmcrt
+        self.rtm: mcmcrt.McmcRtEnsemble = None
 
         # Synthesis
         self.synth_name = None
@@ -118,7 +117,8 @@ class CovHospForecastOutput:
         # self.daily_spline: UnivariateSpline = None
 
         # MCMC
-        self.rtm: synth.McmcRtEnsemble = None
+        import rtrend_tools.rt_estimation as mcmcrt
+        self.rtm: mcmcrt.McmcRtEnsemble = None
 
         # Synthesis
         self.synth_name = None
@@ -190,3 +190,16 @@ class USForecastPost:
         self.fore_daily_tlabels: pd.DatetimeIndex = None  # Daily dates
         self.fore_time_labels: pd.DatetimeIndex = None  # Weekly dates for the forecasted series.
 
+
+# Polymorphic class for noise fit'n synth
+class AbstractNoise:
+
+    def __init__(self, **kwargs):
+        pass
+
+    def fit(self, data: pd.Series, denoised: pd.Series):
+        """Abstract method. Extracts parameters from the (noisy) data and denoised series. Feeds inner variables."""
+
+    def generate(self, new_denoised: np.ndarray):
+        """Abstract method. Must return a new data with calibrated noise incorporated."""
+        raise NotImplementedError

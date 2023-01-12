@@ -180,7 +180,7 @@ def plot_precalc_quantiles_as_layers(ax, quant_lines: np.ndarray, x_array, alpha
 def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantiles, factual_ct: pd.Series,
                           quantile_seq: np.ndarray, state_name, i_ax=None, synth_name=None,
                           num_quantiles=None, ct_color="C0", insert_point=None, highlight_quartiles=True,
-                          plot_trend=True, trend_deg=2):
+                          plot_trend=False, trend_deg=2):
     """Plot all data and configure ax for C(t) data of a single state."""
 
     if not isinstance(fore_time_labels, pd.DatetimeIndex):  # Tries to convert into a pandas Index if not yet

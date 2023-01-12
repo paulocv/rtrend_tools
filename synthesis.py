@@ -369,7 +369,7 @@ def _reconstruct_ct_multiple(ct_past, rt_fore_2d, tg_dist, tg_max, ct_fore_2d, n
             r_curr = rt_fore[i_t_fut]
 
             # Future series chunk
-            for st in range(1, i_t_fut + 1):
+            for st in range(1, min(i_t_fut + 1, tg_max)):
                 lamb += r_curr * tg_dist[st] * ct_fore[i_t_fut - st]
 
             # Past series chunk

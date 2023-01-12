@@ -176,19 +176,24 @@ def export_forecast_cdc(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
     out_df.to_csv(fname, index=False)
 
 
-def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_point=None, add_days=1):
+def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_point=None, add_days=0, export_range=None):
     """
     Data is not assumed to strictly follow the CDC guidelines (all locations and quantiles),
     but warnings are thrown for irregular data.
     """
 
-    # PPREAMBLE
+    # PREAMBLE
     # ------------------------------------------------------------------------------------------------------------------
     today = datetime.datetime.today().date()
     today_str = today.isoformat()
     # target_fmt = "{:d} wk ahead inc flu hosp"
     target_fmt = "{:d} day ahead inc hosp"
-    ndays_fore = WEEKLEN * nweeks_fore
+
+    if export_range is None:
+        ndays_fore = WEEKLEN * nweeks_fore
+        export_range = np.arange(ndays_fore)  # Standard range, given nweeks_fore
+    else:
+        ndays_fore = len(export_range)  # Overrides the number of forecast days by export_range
 
     valid_post_list = [post for post in post_list if post is not None]
     num_valid = len(valid_post_list)
@@ -219,12 +224,6 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
     def process_location(daily_quantiles, num_q, quantile_seq, fore_time_labels, state_name):
         num_lines = ndays_fore * (num_q + int(use_as_point is not None))  # Add point line, if requested
 
-        # # CDC format compliance check (flu only)
-        # for date in fore_time_labels:
-        #     if date.weekday() != WEEKDAY_TGT:
-        #         warnings.warn(f"\n[CDC-WARN] Hey, wrong weekday ({date.weekday()}) was found in "
-        #                       f"forecast data labels!)\n")
-
         # Allocate arrays
         # forecast_date_array = not needed here
         location_array = np.repeat(cdc.to_loc_id[state_name], num_lines)
@@ -236,8 +235,8 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
 
         # ---
         i_line = 0
-        for i_day in range(ndays_fore):  # Loop over forecast days
-            day = fore_time_labels[i_day] + pd.Timedelta(add_days, "d")  # + int(add_week_to_labels) * datetime.timedelta(7)
+        for i_day in export_range:  # Loop over forecast days
+            day = fore_time_labels[i_day] + pd.Timedelta(add_days, "d")
 
             # Write data into arrays
             target_array[i_line:i_line + num_q] = target_fmt.format(i_day)

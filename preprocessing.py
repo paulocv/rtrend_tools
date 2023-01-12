@@ -85,7 +85,7 @@ class NormalMultNoise(AbstractNoise):
         self.std = reldev.std()  # Use doubled standard deviation
 
     def generate(self, new_denoised: np.ndarray):
-        noise = self.coef * np.maximum(np.random.normal(self.mean, self.std, size=new_denoised.shape), -1.)  # Clamped above -1
+        noise = np.maximum(self.coef * np.random.normal(self.mean, self.std, size=new_denoised.shape), -1.)  # Clamped above -1
         return new_denoised * (1. + noise)
 
 

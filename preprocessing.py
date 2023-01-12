@@ -76,6 +76,7 @@ class NormalMultNoise(AbstractNoise):
         super().__init__(**kwargs)
         self.mean = None
         self.std = None
+        self.coef = kwargs.get("noise_coef", 1.0)  # Multiply noise by this coefficient
 
     def fit(self, data: pd.Series, denoised: pd.Series):
         reldev = calc_relative_dev_sample(data, denoised)
@@ -84,7 +85,7 @@ class NormalMultNoise(AbstractNoise):
         self.std = reldev.std()  # Use doubled standard deviation
 
     def generate(self, new_denoised: np.ndarray):
-        noise = np.maximum(np.random.normal(self.mean, self.std, size=new_denoised.shape), -1.)  # Clamped above -1
+        noise = self.coef * np.maximum(np.random.normal(self.mean, self.std, size=new_denoised.shape), -1.)  # Clamped above -1
         return new_denoised * (1. + noise)
 
 

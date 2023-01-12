@@ -42,7 +42,7 @@ class ForecastExecutionData:
         self.except_params: dict = None
         self.tg_params: dict = None
         self.interp_params: dict = None
-        self.smooth_params: dict = None
+        self.preproc_params: dict = None
         self.mcmc_params: dict = None
         self.synth_params: dict = None
         self.recons_params: dict = None
@@ -108,13 +108,13 @@ class CovHospForecastOutput:
         # MCMC (and etc)
         self.tg_dist: np.ndarray = None
 
-        # Smoothening results
+        # Preprocesing results
         self.t_daily: np.ndarray = None
         self.past_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the ROI
         # self.fore_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the forecast region
-        self.ct_past: np.ndarray = None  # Smoothened daily data
-        self.float_data_daily: np.ndarray = None  # Float data after smoothening process
-        # self.daily_spline: UnivariateSpline = None
+        self.ct_past: np.ndarray = None  # Preprocessed daily data that goes down the forecast pipeline
+        self.float_data_daily: np.ndarray = None  # Float data after denoising process
+        self.noise_obj: AbstractNoise = None
 
         # MCMC
         import rtrend_tools.rt_estimation as mcmcrt

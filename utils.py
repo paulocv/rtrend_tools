@@ -1,4 +1,5 @@
 """General utilities. Maybe some could be promoted to my general toolbox?"""
+import os
 
 from pathos.multiprocessing import ProcessPool
 
@@ -37,4 +38,11 @@ def map_parallel_or_sequential(task, contents, ncpus=1, pool=None):
     return pool.map(task, contents)
 
 
-
+def make_dir_from(pathname):
+    """
+    Creates directories recursively for a given path (possibly to a file).
+    No message or error if some directories already exist.
+    """
+    dn = os.path.dirname(pathname)
+    if dn:
+        os.makedirs(dn, exist_ok=True)  # OS independent

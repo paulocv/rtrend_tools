@@ -404,3 +404,21 @@ def calc_tseries_ensemble_quantiles(ct_fore2d, quantiles_seq=None):
         quantiles_seq = CDC_QUANTILES_SEQ
 
     return np.quantile(ct_fore2d, quantiles_seq, axis=0)
+
+
+def sort_ensembles_by_average(data2d_list: list[np.ndarray], axis=1):
+    """
+    Sort a list of 2D arrays by the average over a given axis.
+    Employed to construct the US ensemble of time series, aiming to produce a more realistic
+    set of quantiles.
+    """
+    result_list = []
+
+    for data2d in data2d_list:
+
+        avg_array = data2d.mean(axis=axis)
+        sort_idx = np.argsort(avg_array)
+
+        result_list.append(data2d[sort_idx, :])
+
+    return result_list

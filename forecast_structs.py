@@ -7,6 +7,9 @@ import pandas as pd
 from scipy.interpolate import UnivariateSpline
 
 
+PD_WEEKDAY = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]  # Weekday code labels as defined by Pandas. 0 = Mon, etc
+
+
 class CDCDataBunch:
 
     def __init__(self):
@@ -33,11 +36,11 @@ class ForecastExecutionData:
     Data for the handling of the forecast pipeline for a single state.
     Handled inside the function forecast_state().
     """
-
     def __init__(self):
         # Input parameters and data
         self.state_name = None
         self.state_series: pd.Series = None
+        self.preproc_series: pd.Seires = None
         self.nweeks_fore = None
         self.except_params: dict = None
         self.tg_params: dict = None
@@ -85,12 +88,12 @@ class ForecastOutput:
 
         # Synthesis
         self.synth_name = None
-        self.rt_fore2d: np.ndarray = None
+        self.rt_fore2d: np.ndarray = None  # Synthesized R(t) ensemble. a[i_sample, i_day]
         self.num_ct_samples = None
 
         # Reconstruction
-        self.ct_fore2d: np.ndarray = None
-        self.ct_fore2d_weekly: np.ndarray = None
+        self.ct_fore2d: np.ndarray = None  # Synthesized cases time series ensemble. a[i_sample, i_day]
+        self.ct_fore2d_weekly: np.ndarray = None  # a[i_sample, i_week]
         # self.weekly_quantiles: np.ndarray = None
 
 
@@ -111,7 +114,7 @@ class CovHospForecastOutput:
         # Preprocesing results
         self.t_daily: np.ndarray = None
         self.past_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the ROI
-        # self.fore_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the forecast region
+        self.fore_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the forecast region
         self.ct_past: np.ndarray = None  # Preprocessed daily data that goes down the forecast pipeline
         self.float_data_daily: np.ndarray = None  # Float data after denoising process
         self.noise_obj: AbstractNoise = None
@@ -122,11 +125,11 @@ class CovHospForecastOutput:
 
         # Synthesis
         self.synth_name = None
-        self.rt_fore2d: np.ndarray = None
+        self.rt_fore2d: np.ndarray = None  # Synthesized R(t) ensemble. a[i_sample, i_day]
         self.num_ct_samples = None
 
         # Reconstruction
-        self.ct_fore2d: np.ndarray = None
+        self.ct_fore2d: np.ndarray = None  # a[i_sample, i_day]
         # self.ct_fore2d_weekly: np.ndarray = None
         # self.weekly_quantiles: np.ndarray = None
 
@@ -200,6 +203,7 @@ class AbstractNoise:
     def fit(self, data: pd.Series, denoised: pd.Series):
         """Abstract method. Extracts parameters from the (noisy) data and denoised series. Feeds inner variables."""
 
-    def generate(self, new_denoised: np.ndarray):
-        """Abstract method. Must return a new data with calibrated noise incorporated."""
+    def generate(self, new_denoised: np.ndarray, time_labels: pd.Index):
+        """Abstract method. Must return a new data with calibrated noise incorporated.
+        """
         raise NotImplementedError

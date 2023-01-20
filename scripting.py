@@ -15,8 +15,12 @@ ENV_NAME = "rtrend_forecast"
 ENV_FLEX_PATH = os.path.join("rtrend_tools", "envs", "latest.yml")
 MCMC_BIN = "main_mcmc_rt"
 MCMC_COMPILE_SCRIPT = os.path.join("rtrend_tools", "rt_mcmc", "compile_mcmc_rt.sh")
+
 FLU_TRUTH_DATA_FILE = os.path.join('hosp_data', 'truth-Incident Hospitalizations.csv')  # Warning: contains a space
 FLU_TRUTH_DATA_BKPDIR = os.path.join("hosp_data", "past_BKP")
+
+COV_TRUTH_DATA_FILE = os.path.join('truth_data', 'truth-Incident Hospitalizations.csv')  # Warning: contains a space
+COV_TRUTH_DATA_BKPDIR = os.path.join("truth_data", "past_BKP")
 
 
 def prompt_yn(msg):

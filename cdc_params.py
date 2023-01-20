@@ -17,7 +17,7 @@ NUM_STATES = 53  # Number of locations: states and jurisdictions, excluding the 
 WEEKDAY_TGT = 5  # 5 = Saturday
 NUM_OUTP_LINES = NUM_WEEKS_FORE * (NUM_STATES + 1) * NUM_QUANTILES  # Expected output file number of lines
 NUM_OUTP_LINES_WPOINTS = NUM_WEEKS_FORE * (NUM_STATES + 1) * (NUM_QUANTILES + 1)
-REF_DEADLINE = datetime(2022, 11, 14, 23)  # A reference for submission deadlines (a given Monday 11pm)
+REF_DEADLINE = datetime(2022, 11, 15, 23)  # A reference for submission deadlines (a given Monday 11pm)
 
 # --- COVID parameters
 COV_NUM_STATES = 54  # COVID data includes American Samoa

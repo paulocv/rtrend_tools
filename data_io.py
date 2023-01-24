@@ -43,7 +43,7 @@ def load_cdc_truth_data(fname):
     return cdc
 
 
-def export_forecast_cdc(fname, post_list, us, cdc, nweeks_fore, use_as_point=None,
+def export_forecast_flu(fname, post_list, us, cdc, nweeks_fore, use_as_point=None,
                         add_week_to_labels=False):
     """
     Data is not assumed to strictly follow the CDC guidelines (all locations and quantiles),

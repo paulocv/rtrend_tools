@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 CDC_QUANTILES_SEQ = np.round(np.append(np.append([0.01, 0.025], np.arange(0.05, 0.95 + 0.05, 0.050)), [0.975, 0.99]), 6)
 NUM_QUANTILES = CDC_QUANTILES_SEQ.shape[0]
 NUM_WEEKS_FORE = 4
-WEEKDAY_FC_DAY = 0  # 0 = Monday. The weekday expected as forecast_day entry (file name and column)
+WEEKDAY_FC_DAY = 0  # 0 = Monday. The weekday expected as forecast_day entry (file name and column). COV and FLU.
 
 # --- Flu parameters
 FLU_TRUTH_URL = "https://raw.githubusercontent.com/cdcepi/Flusight-forecast-data/master/data-truth/" \

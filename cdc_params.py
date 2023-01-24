@@ -16,6 +16,7 @@ FLU_TRUTH_URL = "https://raw.githubusercontent.com/cdcepi/Flusight-forecast-data
 FLU_FORECAST_FILE_FMT = "{y:04d}-{m:02d}-{d:02d}-CEPH-Rtrend_fluH.csv"
 NUM_STATES = 53  # Number of locations: states and jurisdictions, excluding the "US" entry.
 WEEKDAY_TGT = 5  # 5 = Saturday
+WEEKDAY_FC_DAY = 0  # 0 = Monday. The weekday expected as forecast_day entry (file name and column)
 NUM_OUTP_LINES = NUM_WEEKS_FORE * (NUM_STATES + 1) * NUM_QUANTILES  # Expected output file number of lines
 NUM_OUTP_LINES_WPOINTS = NUM_WEEKS_FORE * (NUM_STATES + 1) * (NUM_QUANTILES + 1)
 REF_DEADLINE = datetime(2022, 11, 15, 23)  # A reference for submission deadlines (a given Monday 11pm)

@@ -11,7 +11,8 @@ import warnings
 from collections import OrderedDict
 
 from rtrend_tools.cdc_params import CDC_QUANTILES_SEQ, NUM_QUANTILES, NUM_STATES, WEEKDAY_TGT, \
-    NUM_OUTP_LINES, NUM_OUTP_LINES_WPOINTS, COV_NUM_STATES
+    NUM_OUTP_LINES, NUM_OUTP_LINES_WPOINTS, COV_NUM_STATES, WEEKDAY_FC_DAY, \
+    get_last_weekday_before_flu_deadline, get_last_weekday_before_cov_deadline
 from rtrend_tools.forecast_structs import CDCDataBunch, ForecastPost
 from rtrend_tools.interpolate import WEEKLEN
 
@@ -142,7 +143,8 @@ def export_forecast_flu(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
                                               us.fore_time_labels, "US")
 
     # Concatenate all arrays in desired order
-    forecast_date = np.repeat(today_str, actual_num_outp_lines)
+    fd = get_last_weekday_before_flu_deadline(WEEKDAY_FC_DAY)
+    forecast_date = np.repeat(str(fd), actual_num_outp_lines)
     location = np.concatenate(location_list)
     target = np.concatenate(target_list)
     target_end_date = np.concatenate(target_end_date_list)
@@ -276,7 +278,8 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
                                               us.fore_daily_tlabels, "United States")
 
     # Concatenate all arrays in desired order
-    forecast_date = np.repeat(today_str, actual_num_outp_lines)
+    fd = get_last_weekday_before_cov_deadline(WEEKDAY_FC_DAY)
+    forecast_date = np.repeat(str(fd), actual_num_outp_lines)
     location = np.concatenate(location_list)
     target = np.concatenate(target_list)
     target_end_date = np.concatenate(target_end_date_list)

@@ -1,5 +1,6 @@
 """General utilities. Maybe some could be promoted to my general toolbox?"""
 import os
+import pandas as pd
 
 from pathos.multiprocessing import ProcessPool
 
@@ -46,3 +47,11 @@ def make_dir_from(pathname):
     dn = os.path.dirname(pathname)
     if dn:
         os.makedirs(dn, exist_ok=True)  # OS independent
+
+
+def format_pd_timestamp_date(fmt: str, ts: pd.Timestamp):
+    """
+    Formats the date of a Pandas Timestamp object (ts) into a format string (fmt).
+    The fmt string must have keyword fields with 'd' for day, 'm' for month and 'y' for year.
+    """
+    return fmt.format(y=ts.year, m=ts.month, d=ts.day)

@@ -13,6 +13,7 @@ NUM_WEEKS_FORE = 4
 # --- Flu parameters
 FLU_TRUTH_URL = "https://raw.githubusercontent.com/cdcepi/Flusight-forecast-data/master/data-truth/" \
       "truth-Incident%20Hospitalizations.csv"
+FLU_FORECAST_FILE_FMT = "{y:04d}-{m:02d}-{d:02d}-CEPH-Rtrend_fluH.csv"
 NUM_STATES = 53  # Number of locations: states and jurisdictions, excluding the "US" entry.
 WEEKDAY_TGT = 5  # 5 = Saturday
 NUM_OUTP_LINES = NUM_WEEKS_FORE * (NUM_STATES + 1) * NUM_QUANTILES  # Expected output file number of lines
@@ -22,6 +23,7 @@ REF_DEADLINE = datetime(2022, 11, 15, 23)  # A reference for submission deadline
 # --- COVID parameters
 COV_TRUTH_URL = "https://media.githubusercontent.com/media/reichlab/covid19-forecast-hub/master/data-truth/" \
                 "truth-Incident%20Hospitalizations.csv"
+COVH_FORECAST_FILE_FMT = "{y:04d}-{m:02d}-{d:02d}-CEPH-Rtrend_covid.csv"
 COV_NUM_STATES = 54  # COVID data includes American Samoa
 COV_REF_DEADLINE = datetime(2022, 11, 14, 15)  # A reference for submission deadlines (a given Monday 3pm)
 

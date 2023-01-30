@@ -155,6 +155,7 @@ def plot_page_generic(chunk_seq, plot_func, page_width=9., ncols=3, ax_height=3.
 
     return fig, axes, plot_outs
 
+
 def plot_precalc_quantiles_as_layers(ax, quant_lines: np.ndarray, x_array, alpha=0.1, color="green"):
     """
     Plots a sequence of lines as transparent filled layers.
@@ -177,10 +178,10 @@ def plot_precalc_quantiles_as_layers(ax, quant_lines: np.ndarray, x_array, alpha
 # HIGH LEVEL PLOT SCRIPTS
 # ----------------------------------------------------------------------------------------------------------------------
 
-def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantiles, factual_ct: pd.Series,
+def plot_ct_past_and_fore(ax: plt.Axes, fore_time_labels: pd.DatetimeIndex, weekly_quantiles, factual_ct: pd.Series,
                           quantile_seq: np.ndarray, state_name, i_ax=None, synth_name=None,
                           num_quantiles=None, ct_color="C0", insert_point=None, highlight_quartiles=True,
-                          plot_trend=False, trend_deg=2):
+                          plot_trend=False, trend_deg=2, bkg_color=None):
     """Plot all data and configure ax for C(t) data of a single state."""
 
     if not isinstance(fore_time_labels, pd.DatetimeIndex):  # Tries to convert into a pandas Index if not yet
@@ -231,6 +232,9 @@ def plot_ct_past_and_fore(ax, fore_time_labels: pd.DatetimeIndex, weekly_quantil
     # Write name of the synth method
     if synth_name is not None:
         ax.text(0.05, 0.8, synth_name, transform=ax.transAxes)
+
+    if bkg_color is not None:
+        ax.set_facecolor(bkg_color)
 
     rotate_ax_labels(ax)
 

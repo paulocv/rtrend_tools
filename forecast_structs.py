@@ -115,6 +115,7 @@ class CovHospForecastOutput:
         self.t_daily: np.ndarray = None
         self.past_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the ROI
         self.fore_daily_tlabels: pd.DatetimeIndex = None  # Daily time stamps for the forecast region
+        self.fore_weekly_time_labels: pd.DatetimeIndex = None  # Labels of the forecasted weeks
         self.ct_past: np.ndarray = None  # Preprocessed daily data that goes down the forecast pipeline
         self.float_data_daily: np.ndarray = None  # Float data after denoising process
         self.noise_obj: AbstractNoise = None
@@ -130,7 +131,7 @@ class CovHospForecastOutput:
 
         # Reconstruction
         self.ct_fore2d: np.ndarray = None  # a[i_sample, i_day]
-        # self.ct_fore2d_weekly: np.ndarray = None
+        self.ct_fore2d_weekly: np.ndarray = None
         # self.weekly_quantiles: np.ndarray = None
 
 

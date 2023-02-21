@@ -10,6 +10,8 @@ import warnings
 
 from collections import OrderedDict
 
+from colorama import Fore, Style
+
 from rtrend_tools.cdc_params import CDC_QUANTILES_SEQ, NUM_QUANTILES, NUM_STATES, WEEKDAY_TGT, \
     NUM_OUTP_LINES, NUM_OUTP_LINES_WPOINTS, COV_NUM_STATES, WEEKDAY_FC_DAY, \
     get_last_weekday_before_flu_deadline, get_last_weekday_before_cov_deadline
@@ -45,7 +47,7 @@ def load_cdc_truth_data(fname):
 
 
 def export_forecast_flu(fname, post_list, us, cdc, nweeks_fore, use_as_point=None,
-                        add_week_to_labels=False):
+                        add_week_to_labels=False, export_range=None):
     """
     Data is not assumed to strictly follow the CDC guidelines (all locations and quantiles),
     but warnings are thrown for irregular data.
@@ -59,6 +61,11 @@ def export_forecast_flu(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
 
     valid_post_list = [post for post in post_list if post is not None]
     num_valid = len(valid_post_list)
+
+    # Default range of weeks to export
+    if export_range is None:
+        export_range = np.arange(nweeks_fore)
+    nweeks_eff = len(export_range)
 
     # Check output size
     if num_valid != NUM_STATES:
@@ -84,13 +91,15 @@ def export_forecast_flu(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
     # Definition of the processing routine
     # ------------------------------------
     def process_location(weekly_quantiles, num_q, quantile_seq, fore_time_labels, state_name):
-        num_lines = nweeks_fore * (num_q + int(use_as_point is not None))  # Add point line, if requested
+        num_lines = nweeks_eff * (num_q + int(use_as_point is not None))  # Add point line, if requested
 
         # CDC format compliance check
-        for date in fore_time_labels:
+        # for date in fore_time_labels:
+        for i_week in export_range:
+            date = fore_time_labels[i_week]
             if date.weekday() != WEEKDAY_TGT:
-                warnings.warn(f"\n[CDC-WARN] Hey, wrong weekday ({date.weekday()}) was found in "
-                              f"forecast data labels!)\n")
+                warnings.warn(Fore.YELLOW + f"\n[CDC-WARN] Hey, wrong weekday ({date.weekday()}) was found in "
+                              f"forecast data labels!)\n" + Style.RESET_ALL)
 
         # Allocate arrays
         # forecast_date_array = not needed here
@@ -103,7 +112,8 @@ def export_forecast_flu(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
 
         # ---
         i_line = 0
-        for i_week in range(nweeks_fore):  # Loop over forecast weeks
+        # for i_week in range(nweeks_fore):  # Loop over forecast weeks
+        for i_week in export_range:
             week = fore_time_labels[i_week] + int(add_week_to_labels) * datetime.timedelta(7)
 
             # Write data into arrays

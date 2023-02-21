@@ -3,11 +3,14 @@ Module for INTERPOLATION and AGGREGATION of weekly hospitalization data into dai
 """
 import sys
 import warnings
+from typing import Union
 
 import numpy as np
 import pandas as pd
 import scipy.interpolate
 from scipy.interpolate import UnivariateSpline
+
+from rtrend_tools.cdc_params import get_epiweek_unique_id, get_epiweek_label_from_id
 
 WEEKLEN = 7  # Number of steps (days) in a week.
 NEGATIVE_VAL_TOL = -4  # Tolerance for negative values at interpolation.
@@ -123,11 +126,10 @@ def weekly_to_daily_uniform(t_weekly, data_weekly):
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-def daily_to_weekly(data_daily):
+def daily_to_weekly(data_daily, dtype=int):
     """
     CURRENTLY: discards last days that do not fit in a new week.
     SIMPLE METHOD: assumes that there are no missing days. That's why it takes only one array as input.
-    TODO: FINISH THIS METHOD
 
     ct_past: This works both for a single time series (a[i_t]) and an ensemble of time series (a[samp, i_t]),
     although be watchful for performance flaws with large samples (a specifically designed function might work better).
@@ -137,9 +139,7 @@ def daily_to_weekly(data_daily):
     num_days = data_daily.shape[-1]
     num_weeks = num_days // WEEKLEN
 
-    # TODO: CHECK SHAPE EQUALITY BETWEEN ARRAYS.
-
-    data_weekly = np.zeros((*data_daily.shape[:-1], num_weeks), int)
+    data_weekly = np.zeros((*data_daily.shape[:-1], num_weeks), dtype)
 
     for i_day, val in enumerate(data_daily.T):
 
@@ -150,3 +150,51 @@ def daily_to_weekly(data_daily):
         data_weekly.T[i_week] += val
 
     return data_weekly
+
+
+def daily_to_epiweeks(data_daily: np.ndarray, daily_tlabels, dtype=int, full_only=True):
+    """Aggregates daily time series into epidemic weeks.
+
+    If `full_only` is True (default), exports only epiweeks that were entire contained in the data.
+
+    1D signature: data_daily[i_day]
+    2D signature: data_daily[i_series, i_day]
+    """
+    # Check sizes of the data and its time index.
+    num_days = daily_tlabels.shape[0]
+    data_rank = len(data_daily.shape)  # 1D or 2D
+    if data_daily.shape[-1] != num_days:
+        raise ValueError(f"Hey, number of days in daily data ({data_daily.shape[-1]}) does not match the number of days "
+                         f"in the array of time labels ({num_days}).")
+
+    if data_rank == 1:
+        pd_obj = pd.Series(data_daily, index=daily_tlabels)
+    elif data_rank == 2:
+        pd_obj = pd.DataFrame(data_daily.T, index=daily_tlabels)
+    else:
+        raise ValueError(f"Hey, data_daily can only be a 1D or 2D array, but has rank {data_rank}")
+
+    # Call command on the pandas object
+    result = daily_to_epiweeks_pd(pd_obj, full_only=full_only)
+
+    return result.to_numpy().T, result.index  # Dissect back the pandas object into arrays
+
+
+def daily_to_epiweeks_pd(data_daily_pd: Union[pd.Series, pd.DataFrame], full_only=True):
+    """Aggregates daily time series into epidemic weeks.
+    Receives and returns Pandas objects (Series, DataFrame).
+
+    1D signature: data_daily[i_day]
+    2D signature: data_daily.loc[i_day, i_sample]
+    """
+
+    # print(data_daily_pd)
+
+    gp = data_daily_pd.groupby(get_epiweek_unique_id)  # Group by epiweek
+    if full_only:  # Filter by group size and regroup
+        gp = gp.filter(lambda df: df.shape[0] == WEEKLEN).groupby(get_epiweek_unique_id)
+
+    res = gp.sum()
+    res.index = res.index.map(get_epiweek_label_from_id)  # Convert epiweek IDs back to the Saturday
+
+    return res  # Return the sum

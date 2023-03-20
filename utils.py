@@ -55,3 +55,21 @@ def format_pd_timestamp_date(fmt: str, ts: pd.Timestamp):
     The fmt string must have keyword fields with 'd' for day, 'm' for month and 'y' for year.
     """
     return fmt.format(y=ts.year, m=ts.month, d=ts.day)
+
+
+def change_jupyter_py_logo(
+        img_file, width=64, height=64, href=None):
+    """Make a string to be called with IPython.core.display.HTML() to
+    change the default python logo into another icon.
+    """
+    href_line = f"logoParent.innerHTML = " \
+        f"'<a href=\"{href}\">' + logoParent.innerHTML + '</a>';\n" if href is not None else ""
+
+    return f'''
+    <script>
+    var logoParent = document.getElementById("kernel_logo_widget")
+    var logo = document.getElementById("kernel_logo_widget").getElementsByClassName("current_kernel_logo")[0];
+    logo.src = "{img_file}";
+    logo.style = "display: inline; width:{width}px; height:{height}px";
+    ''' + href_line + "</script>"
+

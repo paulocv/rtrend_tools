@@ -188,13 +188,17 @@ def daily_to_epiweeks_pd(data_daily_pd: Union[pd.Series, pd.DataFrame], full_onl
     2D signature: data_daily.loc[i_day, i_sample]
     """
 
-    # print(data_daily_pd)
+    # # OPTION: sort each row before aggregating
+    # for row in data_daily_pd.index:
+    #     data_daily_pd.loc[row] = data_daily_pd.loc[row].sort_values(ignore_index=True)
+    # data_daily_pd = data_daily_pd.sort_values(by=list(data_daily_pd.index), axis=1)
 
     gp = data_daily_pd.groupby(get_epiweek_unique_id)  # Group by epiweek
     if full_only:  # Filter by group size and regroup
         gp = gp.filter(lambda df: df.shape[0] == WEEKLEN).groupby(get_epiweek_unique_id)
 
     res = gp.sum()
+
     res.index = res.index.map(get_epiweek_label_from_id)  # Convert epiweek IDs back to the Saturday
 
     return res  # Return the sum

@@ -247,11 +247,11 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
 
         # ---
         i_line = 0
-        for i_day in export_range:  # Loop over forecast days
+        for iiday, i_day in enumerate(export_range):  # Loop over forecast days
             day = fore_time_labels[i_day] + pd.Timedelta(add_days, "d")
 
             # Write data into arrays
-            target_array[i_line:i_line + num_q] = target_fmt.format(i_day - 1)
+            target_array[i_line:i_line + num_q] = target_fmt.format(iiday)  # Considers as 0 the first day of export range
             target_end_date_array[i_line: i_line + num_q] = day.date().isoformat()
             type_array[i_line: i_line + num_q] = "quantile"
             quantile_array[i_line: i_line + num_q] = quantile_seq[:]

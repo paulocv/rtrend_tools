@@ -243,7 +243,7 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
         target_end_date_array = np.empty(num_lines, dtype=object)
         type_array = np.empty(num_lines, dtype=object)
         quantile_array = np.empty(num_lines, dtype=float)
-        value_array = np.empty(num_lines, dtype=float)
+        value_array = np.empty(num_lines, dtype=int)
 
         # ---
         i_line = 0
@@ -255,7 +255,8 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
             target_end_date_array[i_line: i_line + num_q] = day.date().isoformat()
             type_array[i_line: i_line + num_q] = "quantile"
             quantile_array[i_line: i_line + num_q] = quantile_seq[:]
-            value_array[i_line: i_line + num_q] = daily_quantiles[:, i_day]
+            # value_array[i_line: i_line + num_q] = daily_quantiles[:, i_day]  # Old way – give float values
+            value_array[i_line: i_line + num_q] = np.round(daily_quantiles[:, i_day]).astype(int)
 
             i_line += num_q
 

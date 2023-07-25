@@ -154,6 +154,7 @@ def export_forecast_flu(fname, post_list, us, cdc, nweeks_fore, use_as_point=Non
 
     # Concatenate all arrays in desired order
     fd = get_last_weekday_before_flu_deadline(WEEKDAY_FC_DAY)
+    # fd = get_last_weekday_before_cov_deadline(WEEKDAY_FC_DAY, now=datetime.datetime.today() - datetime.timedelta(days=1))
     forecast_date = np.repeat(str(fd), actual_num_outp_lines)
     location = np.concatenate(location_list)
     target = np.concatenate(target_list)
@@ -290,6 +291,7 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
 
     # Concatenate all arrays in desired order
     fd = get_last_weekday_before_cov_deadline(WEEKDAY_FC_DAY)
+    # fd = get_last_weekday_before_cov_deadline(WEEKDAY_FC_DAY, now=datetime.datetime.today() - datetime.timedelta(days=1))
     forecast_date = np.repeat(str(fd), actual_num_outp_lines)
     location = np.concatenate(location_list)
     target = np.concatenate(target_list)

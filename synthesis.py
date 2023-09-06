@@ -71,9 +71,14 @@ def _k_linear_func(x, r1, r2):
     return (r2/2 - r1) * (x - 1) + r1
 
 
-def apply_linear_dynamic_ramp_to(arr, ndays_fore, r1_start, r1_end, r2_start, r2_end, x_array=None, i_saturate=-1,
+def _r_linear_func(x, r1, r2):
+    return (r2 - r1) * x + 2 * r1 - r2
+
+
+def apply_linear_dynamic_ramp_OLD(arr, ndays_fore, r1_start, r1_end, r2_start, r2_end, x_array=None, i_saturate=-1,
                                  **kwargs):
     """
+    THIS FUNCTION DISTORTED MID-SCALE R(t) VALUES.
     Dynamic ramp, where k_start and k_end depend on an array of arguments.
     This array can be informed as x_array, expected to have the same number of samples as arr. If not informed, the
     first time point of each sample in arr (i.e., arr[:,0]) is used.
@@ -109,6 +114,46 @@ def apply_linear_dynamic_ramp_to(arr, ndays_fore, r1_start, r1_end, r2_start, r2
         tgt_array[:] = sat_array[:]
 
     return ramp * arr
+
+
+def apply_linear_dynamic_ramp_to(arr, ndays_fore, r1_start, r1_end, r2_start, r2_end, x_array=None, i_saturate=-1,
+                                 **kwargs):
+    """
+    Dynamic ramp, where r_start and r_end depend on an array of arguments.
+    This array can be informed as x_array, expected to have the same number of samples as arr. If not informed, the
+    first time point of each sample in arr (i.e., arr[:,0]) is used.
+
+    --- Equations
+    For each R in x_array:
+    – R(t) =  (R_end - R_start) * (t / ndays_fore) + R_start
+
+    Where:
+    – R_start = (r2_start - r1_start) * R  +  2 * r1_start - r2_start
+    – R_end = (r2_end - r1_end) * R  +  2 * r1_end - r2_end
+    """
+    # --- Argument (x-array) array parsing
+    if x_array is None:
+        x_array = arr[:, 0]
+
+    if x_array.shape[0] != arr.shape[0]:
+        raise ValueError("Hey, x_array must have the same size as the first dimension of arr.")
+
+    # --- Apply ramp
+    res = np.linspace(
+        _r_linear_func(x_array, r1_start, r2_start),
+        _r_linear_func(x_array, r1_end, r2_end),
+        ndays_fore
+    ).T
+
+    # --- Apply saturation
+    if i_saturate != -1:
+        val_array = res[:, i_saturate]
+        tgt_array = res[:, i_saturate + 1:]
+        sat_array = np.repeat(np.reshape(val_array, (val_array.shape[0], 1)), tgt_array.shape[1], axis=1)
+
+        tgt_array[:] = sat_array[:]
+
+    return res
 
 
 # ----------------------------------------------------------------------------------------------------------------------

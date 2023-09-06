@@ -188,6 +188,9 @@ def random_normal_synth(rtm: McmcRtEnsemble, ct_past, ndays_fore, *args, **kwarg
     rng = np.random.default_rng(seed)
     vals = rng.normal(center, sigma, num_samples)
 
+    # Regularize negatives (clamp to zero)
+    vals[vals < 0] = 0
+
     # Repeat values over time
     for i in range(ndays_fore):
         out[:, i] = vals

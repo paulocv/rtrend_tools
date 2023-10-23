@@ -290,7 +290,7 @@ def export_forecast_cov_hosp(fname, post_list, us, cdc, nweeks_fore, use_as_poin
                                               us.fore_daily_tlabels, "United States")
 
     # Concatenate all arrays in desired order
-    fd = get_last_weekday_before_cov_deadline(WEEKDAY_FC_DAY)
+    fd = get_last_weekday_before_cov_deadline(WEEKDAY_FC_DAY)#- pd.Timedelta("1w")
     # fd = get_last_weekday_before_cov_deadline(WEEKDAY_FC_DAY, now=datetime.datetime.today() - datetime.timedelta(days=1))
     forecast_date = np.repeat(str(fd), actual_num_outp_lines)
     location = np.concatenate(location_list)

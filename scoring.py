@@ -25,6 +25,11 @@ def alpha_covered_score(
     For each data in the ``observations`` array and respective quantiles (q_dict), returns True if the observation
     falls inside the range and False otherwise.
 
+    This function was extracted from:
+    https://github.com/adrian-lison/interval-scoring
+    - Accessed on 2023-02-02.
+    - No license information available as of the retrieval date.
+
     Parameters
     ----------
     observations : array_like
@@ -98,10 +103,18 @@ def interval_score(
     check_consistency=True,
 ):
     """
-    Compute interval scores (1) for an array of observations and predicted intervals.
+    Compute interval scores (1) for an array of observations and
+    predicted intervals.
     
-    Either a dictionary with the respective (alpha/2) and (1-(alpha/2)) quantiles via q_dict needs to be
+    Either a dictionary with the respective (alpha/2) and (1-(alpha/2))
+    quantiles via q_dict needs to be
     specified or the quantiles need to be specified via q_left and q_right.
+
+    This function was extracted from:
+    https://github.com/adrian-lison/interval-scoring
+    - Accessed on 2023-02-02.
+    - No license information available as of the retrieval date.
+    - May be modified from the original version.
     
     Parameters
     ----------
@@ -178,10 +191,18 @@ def weighted_interval_score(
     observations, alphas, q_dict, weights=None, percent=False, check_consistency=True
 ):
     """
-    Compute weighted interval scores for an array of observations and a number of different predicted intervals.
+    Compute weighted interval scores for an array of observations and a
+    number of different predicted intervals.
     
-    This function implements the WIS-score (2). A dictionary with the respective (alpha/2)
-    and (1-(alpha/2)) quantiles for all alpha levels given in `alphas` needs to be specified.
+    This function implements the WIS-score (2). A dictionary with the
+    respective (alpha/2) and (1-(alpha/2)) quantiles for all alpha
+    levels given in `alphas` needs to be specified.
+
+    This function was extracted from:
+    https://github.com/adrian-lison/interval-scoring
+    - Accessed on 2023-02-02.
+    - No license information available as of the retrieval date.
+    - May be modified from the original version.
     
     Parameters
     ----------
@@ -190,13 +211,17 @@ def weighted_interval_score(
     alphas : iterable
         Alpha levels for (1-alpha) intervals.
     q_dict : dict
-        Dictionary with predicted quantiles for all instances in `observations`.
+        Dictionary with predicted quantiles for all instances
+        in `observations`.
     weights : iterable, optional
-        Corresponding weights for each interval. If `None`, `weights` is set to `alphas`, yielding the WIS^alpha-score.
+        Corresponding weights for each interval. If `None`, `weights`
+        is set to `alphas`, yielding the WIS^alpha-score.
     percent: bool, optional
-        If `True`, score is scaled by absolute value of observations to yield the double absolute percentage error. Default is `False`.
+        If `True`, score is scaled by absolute value of observations
+        to yield the double absolute percentage error. Default is `False`.
     check_consistency: bool, optional
-        If `True`, quantiles in `q_dict` are checked for consistency. Default is `True`.
+        If `True`, quantiles in `q_dict` are checked for consistency.
+        Default is `True`.
         
     Returns
     -------
@@ -207,7 +232,9 @@ def weighted_interval_score(
     calibration : array_like
         Calibration component of weighted interval scores.
         
-    (2) Bracher, J., Ray, E. L., Gneiting, T., & Reich, N. G. (2020). Evaluating epidemic forecasts in an interval format. arXiv preprint arXiv:2005.12881.
+    (2) Bracher, J., Ray, E. L., Gneiting, T., & Reich, N. G. (2020).
+    Evaluating epidemic forecasts in an interval format.
+    arXiv preprint arXiv:2005.12881.
     """
     if weights is None:
         weights = np.array(alphas)/2
@@ -245,12 +272,21 @@ def weighted_interval_score_fast(
     observations, alphas, q_dict, weights=None, percent=False, check_consistency=True
 ):
     """
-    Compute weighted interval scores for an array of observations and a number of different predicted intervals.
+    Compute weighted interval scores for an array of observations and a
+    number of different predicted intervals.
     
-    This function implements the WIS-score (2). A dictionary with the respective (alpha/2)
-    and (1-(alpha/2)) quantiles for all alpha levels given in `alphas` needs to be specified.
+    This function implements the WIS-score (2). A dictionary with the
+    respective (alpha/2) and (1-(alpha/2)) quantiles for all alpha
+    levels given in `alphas` needs to be specified.
     
-    This is a more efficient implementation using array operations instead of repeated calls of `interval_score`.
+    This is a more efficient implementation using array operations
+    instead of repeated calls of `interval_score`.
+
+    This function was extracted from:
+    https://github.com/adrian-lison/interval-scoring
+    - Accessed on 2023-02-02.
+    - No license information available as of the retrieval date.
+    - May be modified from the original version.
     
     Parameters
     ----------
@@ -259,13 +295,17 @@ def weighted_interval_score_fast(
     alphas : iterable
         Alpha levels for (1-alpha) intervals.
     q_dict : dict
-        Dictionary with predicted quantiles for all instances in `observations`.
+        Dictionary with predicted quantiles for all instances in
+        `observations`.
     weights : iterable, optional
-        Corresponding weights for each interval. If `None`, `weights` is set to `alphas`, yielding the WIS^alpha-score.
+        Corresponding weights for each interval. If `None`, `weights`
+        is set to `alphas`, yielding the WIS^alpha-score.
     percent: bool, optional
-        If `True`, score is scaled by absolute value of observations to yield a percentage error. Default is `False`.
+        If `True`, score is scaled by absolute value of observations
+        to yield a percentage error. Default is `False`.
     check_consistency: bool, optional
-        If `True`, quantiles in `q_dict` are checked for consistency. Default is `True`.
+        If `True`, quantiles in `q_dict` are checked for consistency.
+        Default is `True`.
         
     Returns
     -------
@@ -276,7 +316,9 @@ def weighted_interval_score_fast(
     calibration : array_like
         Calibration component of weighted interval scores.
         
-    (2) Bracher, J., Ray, E. L., Gneiting, T., & Reich, N. G. (2020). Evaluating epidemic forecasts in an interval format. arXiv preprint arXiv:2005.12881.
+    (2) Bracher, J., Ray, E. L., Gneiting, T., & Reich, N. G. (2020).
+    Evaluating epidemic forecasts in an interval format.
+    arXiv preprint arXiv:2005.12881.
     """
     if weights is None:
         weights = np.array(alphas)/2
